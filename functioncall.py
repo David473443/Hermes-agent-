@@ -6,26 +6,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI(title="Hermes Agent API")
+app = FastAPI()
 
-# Initialize OpenAI client pointing to OpenRouter
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1", #
-    api_key=os.getenv("OPENROUTER_API_KEY")
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
 )
 
 class ChatRequest(BaseModel):
     prompt: str
 
 @app.get("/")
-def health_check():
-    return {"status": "Hermes Agent backend is live 24/7!"}
+def home():
+    return {"status": "Server running!"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
     try:
         response = client.chat.completions.create(
-            model="nousresearch/hermes-3-llama-3.1-405b", #
+            # 👈 THIS IS WHERE YOU SELECT YOUR MODEL!
+            model="nousresearch/hermes-3-llama-3.1-70b", 
             messages=[
                 {"role": "user", "content": request.prompt}
             ]
